@@ -1,6 +1,6 @@
 package com.dsp.microservice.config;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +17,7 @@ class CyclicConfigurationTest {
         try {
             ApplicationContext context = new AnnotationConfigApplicationContext(CyclicConfiguration.class);
             assertNull(context);
-            fail("It mus be fail because cyclic");
+            Assertions.fail("It mus be fail because cyclic");
         }catch (BeansException e){
             e.printStackTrace();
         }
