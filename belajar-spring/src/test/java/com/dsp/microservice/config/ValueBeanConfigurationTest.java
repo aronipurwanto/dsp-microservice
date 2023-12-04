@@ -10,29 +10,20 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class DuplicateBeanConfigurationTest {
+class ValueBeanConfigurationTest {
     private ApplicationContext applicationContext;
 
     @BeforeEach
     void setUp() {
         applicationContext =
-                new AnnotationConfigApplicationContext(DuplicateBeanConfiguration.class);
+                new AnnotationConfigApplicationContext(ValueBeanConfiguration.class);
     }
 
     @Test
-    void testDuplicate() {
-        Foo foo1 = applicationContext.getBean("foo1", Foo.class);
-        Foo foo2 = applicationContext.getBean("foo2", Foo.class);
-
-        assertNotSame(foo1, foo2);
-        //assertSame(foo1, foo2);
-    }
-
-    @Test
-    void testPrimary() {
+    void testValueBean() {
         Foo foo = applicationContext.getBean(Foo.class);
-        Foo foo1 = applicationContext.getBean("foo1", Foo.class);
-        Foo foo2 = applicationContext.getBean("foo2", Foo.class);
+        Foo foo1 = applicationContext.getBean("fooFirst", Foo.class);
+        Foo foo2 = applicationContext.getBean("fooSecond", Foo.class);
 
         assertSame(foo1, foo);
         assertNotSame(foo2, foo);
