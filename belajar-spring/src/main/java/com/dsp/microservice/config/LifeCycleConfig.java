@@ -10,4 +10,9 @@ public class LifeCycleConfig {
     public Connection connection(){
         return new Connection();
     }
+
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    public Server server(){
+        return new Server();
+    }
 }
