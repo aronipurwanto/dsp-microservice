@@ -9,12 +9,12 @@ import org.springframework.context.annotation.Primary;
 public class ValueBeanConfiguration {
 
     @Primary
-    @Bean(value = "fooFirst")
+    @Bean(value = "fooFirstValue")
     public Foo foo1(){
         Foo foo = new Foo();
         return foo;
     }
-    @Bean(value = "fooSecond")
+    @Bean(value = "fooSecondValue")
     public Foo foo2(){
         Foo foo = new Foo();
         return foo;

@@ -22,8 +22,8 @@ class ValueBeanConfigurationTest {
     @Test
     void testValueBean() {
         Foo foo = applicationContext.getBean(Foo.class);
-        Foo foo1 = applicationContext.getBean("fooFirst", Foo.class);
-        Foo foo2 = applicationContext.getBean("fooSecond", Foo.class);
+        Foo foo1 = applicationContext.getBean("fooFirstValue", Foo.class);
+        Foo foo2 = applicationContext.getBean("fooSecondValue", Foo.class);
 
         assertSame(foo1, foo);
         assertNotSame(foo2, foo);

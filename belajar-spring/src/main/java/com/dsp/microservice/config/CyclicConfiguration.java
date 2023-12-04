@@ -6,7 +6,7 @@ import com.dsp.microservice.cyclic.CyclicC;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class CyclicConfiguration {
     @Bean
     public CyclicA cyclicA(CyclicB cyclicB){
