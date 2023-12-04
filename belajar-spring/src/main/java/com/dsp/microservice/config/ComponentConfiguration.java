@@ -4,7 +4,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan(basePackages = {"com.dsp.microservice.service"})
+@ComponentScan(basePackages = {
+        "com.dsp.microservice.service",
+        "com.dsp.microservice.repository"
+})
 public class ComponentConfiguration {
 
 }

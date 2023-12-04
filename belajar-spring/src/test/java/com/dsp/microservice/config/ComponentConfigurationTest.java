@@ -1,5 +1,6 @@
 package com.dsp.microservice.config;
 
+import com.dsp.microservice.repository.ProductRepository;
 import com.dsp.microservice.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,5 +22,16 @@ class ComponentConfigurationTest {
     void testProductService() {
         ProductService service = context.getBean("productService", ProductService.class);
         assertNotNull(service);
+    }
+
+    @Test
+    void testInjectComponent() {
+        ProductService service = context.getBean(ProductService.class);
+        ProductRepository repository = context.getBean(ProductRepository.class);
+
+        assertNotNull(service);
+        assertNotNull(repository);
+
+        assertSame(repository, service.getRepository());
     }
 }
