@@ -1,6 +1,10 @@
 package com.dsp.microservice.config;
 
+import com.dsp.microservice.repository.CategoryRepository;
+import com.dsp.microservice.repository.CustomerRepository;
 import com.dsp.microservice.repository.ProductRepository;
+import com.dsp.microservice.service.CategoryService;
+import com.dsp.microservice.service.CustomerService;
 import com.dsp.microservice.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +29,7 @@ class ComponentConfigurationTest {
     }
 
     @Test
-    void testInjectComponent() {
+    void testConstructorInject() {
         ProductService service = context.getBean(ProductService.class);
         ProductRepository repository = context.getBean(ProductRepository.class);
 
@@ -33,5 +37,28 @@ class ComponentConfigurationTest {
         assertNotNull(repository);
 
         assertSame(repository, service.getRepository());
+    }
+
+    @Test
+    void testSetterInjection() {
+
+        CategoryService service = context.getBean(CategoryService.class);
+        CategoryRepository repository = context.getBean(CategoryRepository.class);
+        CategoryRepository repository2 = context.getBean("categoryRepository", CategoryRepository.class);
+
+        assertNotNull(service);
+        assertNotNull(repository);
+
+        assertSame(repository, service.getRepository());
+        assertSame(repository, repository2);
+        assertSame(repository2, service.getRepository());
+    }
+
+    @Test
+    void testFieldInjection() {
+        CustomerService service = context.getBean(CustomerService.class);
+        CustomerRepository repository = context.getBean(CustomerRepository.class);
+
+        assertSame(service.getRepository(), repository);
     }
 }

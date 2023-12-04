@@ -1,5 +1,7 @@
 package com.dsp.microservice.config;
 
+import com.dsp.microservice.repository.CustomerRepository;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,4 +12,13 @@ import org.springframework.context.annotation.Configuration;
 })
 public class ComponentConfiguration {
 
+    @Bean
+    public CustomerRepository normalCustomerRepository(){
+        return new CustomerRepository();
+    }
+
+    @Bean
+    public CustomerRepository premiumCustomerRepository(){
+        return new CustomerRepository();
+    }
 }

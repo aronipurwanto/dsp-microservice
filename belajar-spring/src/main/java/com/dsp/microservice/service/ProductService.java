@@ -6,6 +6,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,9 +14,16 @@ import org.springframework.stereotype.Component;
 @Data
 public class ProductService {
     private ProductRepository repository;
+    private String name;
 
+    @Autowired
     public ProductService(ProductRepository repository) {
         this.repository = repository;
+    }
+
+    public ProductService(ProductRepository repository, String name) {
+        this.repository = repository;
+        this.name = name;
     }
 
     @PostConstruct
