@@ -24,7 +24,7 @@ public class CategoryController {
     @GetMapping
     public ModelAndView get(){
         List<CategoryResponse> data = service.getAll();
-        ModelAndView view = new ModelAndView("category/index");
+        ModelAndView view = new ModelAndView("pages/category/index");
         // send data to view
         view.addObject("dataList", data);
         return view;
@@ -32,14 +32,14 @@ public class CategoryController {
 
     @GetMapping("/add")
     public ModelAndView add(){
-        return new ModelAndView("category/add");
+        return new ModelAndView("pages/category/add");
     }
 
     @PostMapping("/save")
     public ModelAndView save(@ModelAttribute CategoryRequest request){
         Optional<CategoryResponse> result = service.save(request);
         if(result.isEmpty()){
-            ModelAndView view = new ModelAndView("category/add");
+            ModelAndView view = new ModelAndView("pages/category/add");
             view.addObject("error", "Save failed");
             return view;
         }
@@ -53,7 +53,7 @@ public class CategoryController {
             return new ModelAndView("redirect:/category");
         }
 
-        ModelAndView view = new ModelAndView("category/edit");
+        ModelAndView view = new ModelAndView("pages/category/edit");
         view.addObject("data", result);
         return view;
     }
@@ -62,7 +62,7 @@ public class CategoryController {
     public ModelAndView update(@ModelAttribute CategoryRequest request){
         Optional<CategoryResponse> result = service.update(request, request.getId());
         if(result.isEmpty()){
-            ModelAndView view = new ModelAndView("category/edit");
+            ModelAndView view = new ModelAndView("pages/category/edit");
             view.addObject("error", "Save failed");
             view.addObject("data", result);
             return view;

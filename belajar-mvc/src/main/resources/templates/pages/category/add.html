@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/main}">
+<head>
+  <meta charset="UTF-8">
+  <title>Customer - Add</title>
+</head>
+<body>
+<!-- wajib ada-->
+<div class="container-fluid" layout:fragment="content">
+  <!-- Small boxes (Stat box) wajib ada-->
+  <div class="row">
+    <!-- wajib ada -->
+    <div class="col-12">
+      <!-- widged -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Customer Data</h3>
+        </div>
+
+        <form th:action="@{/customer/save}" method="post">
+          <div class="card-body">
+            <label>Code : </label>
+            <input type="text" name="code"> <br/><br/>
+
+            <label>Name : </label>
+            <input type="text" name="name"> <br/><br/>
+
+            <label>Description : </label>
+            <textarea type="text" name="email"></textarea> <br/>
+          </div>
+          <div class="card-footer">
+            <button type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
