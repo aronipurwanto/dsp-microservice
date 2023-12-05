@@ -1,13 +1,16 @@
 package com.dsp.belajarmvc.service;
 
+import com.dsp.belajarmvc.model.entity.CategoryEntity;
 import com.dsp.belajarmvc.model.request.CategoryRequest;
 import com.dsp.belajarmvc.model.response.CategoryResponse;
 import com.dsp.belajarmvc.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{
@@ -19,8 +22,14 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
-    public List getAll() {
-        return null;
+    public List<CategoryResponse> getAll() {
+        List<CategoryEntity> result = repository.findAll();
+        if(result.isEmpty()){
+            return Collections.emptyList();
+        }
+
+        return result.stream().map(CategoryResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override

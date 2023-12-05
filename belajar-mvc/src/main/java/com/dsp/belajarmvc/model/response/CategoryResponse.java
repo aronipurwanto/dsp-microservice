@@ -1,5 +1,6 @@
 package com.dsp.belajarmvc.model.response;
 
+import com.dsp.belajarmvc.model.entity.CategoryEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,4 +13,11 @@ public class CategoryResponse {
     private String code;
     private String name;
     private String description;
+
+    public CategoryResponse(CategoryEntity entity) {
+        this.id = entity.getId();
+        this.code = entity.getCode();
+        this.name = entity.getName();
+        this.description = entity.getDescription();
+    }
 }
