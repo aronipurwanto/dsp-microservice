@@ -4,6 +4,8 @@ import com.dsp.belajarmvc.model.entity.CategoryEntity;
 import com.dsp.belajarmvc.model.request.CategoryRequest;
 import com.dsp.belajarmvc.model.response.CategoryResponse;
 import com.dsp.belajarmvc.repository.CategoryRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CategoryServiceImpl implements CategoryService{
     private CategoryRepository repository;
@@ -34,7 +37,20 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Optional<CategoryResponse> save(CategoryRequest request) {
-        return Optional.empty();
+        if(request == null) {
+            return Optional.empty();
+        }
+
+        try{
+            CategoryEntity entity = new CategoryEntity();
+            BeanUtils.copyProperties(request, entity);
+            repository.save(entity);
+            log.info("Save category success");
+            return Optional.of(new CategoryResponse(entity));
+        }catch (Exception e){
+            log.error("Save category failed, error: {}", e.getMessage());
+            return Optional.empty();
+        }
     }
 
     @Override
