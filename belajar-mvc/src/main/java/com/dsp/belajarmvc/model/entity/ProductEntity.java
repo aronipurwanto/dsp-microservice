@@ -30,7 +30,9 @@ public class ProductEntity {
     private Long price;
 
     @Temporal(TemporalType.DATE)
-    private Date expiredDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "expired_date")
+    private Date expireDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
