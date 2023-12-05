@@ -36,6 +36,20 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    public Optional<CategoryResponse> getById(Long id) {
+        if(id == 0L) {
+            return Optional.empty();
+        }
+
+        CategoryEntity result = repository.findById(id).orElse(null);
+        if(result == null){
+            return Optional.empty();
+        }
+
+        return Optional.of(new CategoryResponse(result));
+    }
+
+    @Override
     public Optional<CategoryResponse> save(CategoryRequest request) {
         if(request == null) {
             return Optional.empty();
@@ -55,7 +69,24 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Optional<CategoryResponse> update(CategoryRequest request, Long id) {
-        return Optional.empty();
+        if(request == null) {
+            return Optional.empty();
+        }
+
+        CategoryEntity entity = repository.findById(id).orElse(null);
+        if(entity == null){
+            return Optional.empty();
+        }
+
+        try{
+            BeanUtils.copyProperties(request, entity);
+            repository.save(entity);
+            log.info("Update category success");
+            return Optional.of(new CategoryResponse(entity));
+        }catch (Exception e){
+            log.error("Update category failed, error: {}", e.getMessage());
+            return Optional.empty();
+        }
     }
 
     @Override

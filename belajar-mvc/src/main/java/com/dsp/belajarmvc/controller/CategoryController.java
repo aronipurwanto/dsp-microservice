@@ -5,10 +5,7 @@ import com.dsp.belajarmvc.model.response.CategoryResponse;
 import com.dsp.belajarmvc.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -44,6 +41,30 @@ public class CategoryController {
         if(result.isEmpty()){
             ModelAndView view = new ModelAndView("category/add");
             view.addObject("error", "Save failed");
+            return view;
+        }
+        return new ModelAndView("redirect:/category");
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView edit(@PathVariable("id") Long id){
+        CategoryResponse result = service.getById(id).orElse(null);
+        if(result == null){
+            return new ModelAndView("redirect:/category");
+        }
+
+        ModelAndView view = new ModelAndView("category/edit");
+        view.addObject("data", result);
+        return view;
+    }
+
+    @PostMapping("/update")
+    public ModelAndView update(@ModelAttribute CategoryRequest request){
+        Optional<CategoryResponse> result = service.update(request, request.getId());
+        if(result.isEmpty()){
+            ModelAndView view = new ModelAndView("category/edit");
+            view.addObject("error", "Save failed");
+            view.addObject("data", result);
             return view;
         }
         return new ModelAndView("redirect:/category");
