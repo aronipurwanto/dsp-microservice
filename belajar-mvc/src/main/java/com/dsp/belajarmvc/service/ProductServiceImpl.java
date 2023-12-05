@@ -3,10 +3,12 @@ package com.dsp.belajarmvc.service;
 import com.dsp.belajarmvc.model.entity.CategoryEntity;
 import com.dsp.belajarmvc.model.entity.ProductEntity;
 import com.dsp.belajarmvc.model.request.ProductRequest;
+import com.dsp.belajarmvc.model.response.CategoryResponse;
 import com.dsp.belajarmvc.model.response.ProductResponse;
 import com.dsp.belajarmvc.repository.CategoryRepository;
 import com.dsp.belajarmvc.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,16 @@ public class ProductServiceImpl implements ProductService{
     public ProductServiceImpl(ProductRepository repository, CategoryRepository categoryRepo) {
         this.repository = repository;
         this.categoryRepo = categoryRepo;
+    }
+
+    @Override
+    public List<CategoryResponse> getCategory() {
+        List<CategoryEntity> result = this.categoryRepo.findAll();
+        if(result.isEmpty()){
+            return Collections.emptyList();
+        }
+        return result.stream().map(CategoryResponse::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -52,7 +64,7 @@ public class ProductServiceImpl implements ProductService{
             return Optional.empty();
         }
 
-        CategoryEntity category = this.categoryRepo.findById(request.getId()).orElse(null);
+        CategoryEntity category = this.categoryRepo.findById(request.getCategoryId()).orElse(null);
         if(category == null){
             return Optional.empty();
         }
@@ -64,6 +76,55 @@ public class ProductServiceImpl implements ProductService{
             return Optional.of(new ProductResponse(product));
         }catch (Exception e){
             log.error("Save product failed, error: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<ProductResponse> update(ProductRequest request, Long id) {
+        if(request == null) {
+            return Optional.empty();
+        }
+        ProductEntity product = this.repository.findById(id).orElse(null);
+        if(product == null){
+            return Optional.empty();
+        }
+
+        CategoryEntity category = this.categoryRepo.findById(request.getCategoryId()).orElse(null);
+        if(category == null){
+            return Optional.empty();
+        }
+
+        try{
+            BeanUtils.copyProperties(request, product);
+            product.setCategory(category);
+            this.repository.save(product);
+
+            log.info("Update product success");
+            return Optional.of(new ProductResponse(product));
+        }catch (Exception e){
+            log.error("Update product failed, error: {}", e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<ProductResponse> delete(Long id) {
+        if(id == 0L) {
+            return Optional.empty();
+        }
+
+        ProductEntity product = this.repository.findById(id).orElse(null);
+        if(product == null){
+            return Optional.empty();
+        }
+
+        try{
+            this.repository.delete(product);
+            log.info("Delete product success");
+            return Optional.of(new ProductResponse(product));
+        }catch (Exception e){
+            log.error("Delete product failed, error: {}", e.getMessage());
             return Optional.empty();
         }
     }
