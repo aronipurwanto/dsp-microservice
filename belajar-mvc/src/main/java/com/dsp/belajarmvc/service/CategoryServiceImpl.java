@@ -91,6 +91,21 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public Optional<CategoryResponse> delete(Long id) {
-        return Optional.empty();
+        if(id == 0L){
+            return Optional.empty();
+        }
+        CategoryEntity entity = repository.findById(id).orElse(null);
+        if(entity == null){
+            return Optional.empty();
+        }
+
+        try{
+            repository.delete(entity);
+            log.info("Delete category success");
+            return Optional.of(new CategoryResponse(entity));
+        }catch (Exception e){
+            log.error("Delete category failed, error: {}", e.getMessage());
+            return Optional.empty();
+        }
     }
 }

@@ -69,4 +69,10 @@ public class CategoryController {
         }
         return new ModelAndView("redirect:/category");
     }
+
+    @GetMapping("/delete/{id}")
+    public ModelAndView delete(@PathVariable("id") Long id){
+        service.delete(id).orElse(null);
+        return new ModelAndView("redirect:/category");
+    }
 }
