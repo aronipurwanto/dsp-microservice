@@ -19,18 +19,31 @@
 
         <form th:action="@{/customer/save}" method="post">
           <div class="card-body">
-            <label>Code : </label>
-            <input type="text" name="code"> <br/><br/>
-
-            <label>Name : </label>
-            <input type="text" name="name"> <br/><br/>
-
-            <label>Description : </label>
-            <textarea type="text" name="email"></textarea> <br/>
+            <div class="form-group row">
+              <label for="code" class="col-sm-2 col-form-label">Code</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="code" name="code" placeholder="code">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="name" class="col-sm-2 col-form-label">Name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name" placeholder="name">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="description" class="col-sm-2 col-form-label">description</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="description" name="description" placeholder="description">
+              </div>
+            </div>
           </div>
+          <!-- /.card-body -->
           <div class="card-footer">
-            <button type="submit">Save</button>
+            <button type="submit" class="btn btn-info">Sign in</button>
+            <a th:ref="@{~/category}" class="btn btn-default float-right">Cancel</a>
           </div>
+          <!-- /.card-footer -->
         </form>
       </div>
     </div>
