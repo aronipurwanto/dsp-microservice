@@ -12,12 +12,12 @@
     <!-- wajib ada -->
     <div class="col-12">
       <!-- widged -->
-      <div class="card">
+      <div class="card card-info">
         <div class="card-header">
-          <h3 class="card-title">Customer Data</h3>
+          <h3 class="card-title">Product New</h3>
         </div>
 
-        <form th:action="@{/customer/save}" method="post">
+        <form th:action="@{/product/save}" method="post">
           <div class="card-body">
             <div class="form-group row">
               <label for="code" class="col-sm-2 col-form-label">Code</label>
@@ -32,16 +32,30 @@
               </div>
             </div>
             <div class="form-group row">
-              <label for="description" class="col-sm-2 col-form-label">description</label>
+              <label for="price" class="col-sm-2 col-form-label">Price</label>
               <div class="col-sm-10">
-                <input type="text" class="form-control" id="description" name="description" placeholder="description">
+                <input type="text" class="form-control" id="price" name="price" placeholder="Price">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="expireDate" class="col-sm-2 col-form-label">Expire Date</label>
+              <div class="col-sm-10">
+                <input type="date" class="form-control" id="expireDate" name="expireDate">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="categoryId" class="col-sm-2 col-form-label">Category</label>
+              <div class="col-sm-10">
+                <select id="categoryId" name="categoryId" class="form-control">
+                  <option th:each="item: ${categoryList}" th:text="${item.name}" th:value="${item.id}"></option>
+                </select>
               </div>
             </div>
           </div>
           <!-- /.card-body -->
           <div class="card-footer">
-            <button type="submit" class="btn btn-info">Sign in</button>
-            <a th:ref="@{~/category}" class="btn btn-default float-right">Cancel</a>
+            <button type="submit" class="btn btn-info">Submit</button>
+            <a th:ref="@{~/product}" class="btn btn-default float-right">Cancel</a>
           </div>
           <!-- /.card-footer -->
         </form>

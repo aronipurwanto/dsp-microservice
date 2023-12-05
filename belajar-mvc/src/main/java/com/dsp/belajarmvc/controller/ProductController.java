@@ -1,6 +1,5 @@
 package com.dsp.belajarmvc.controller;
 
-import com.dsp.belajarmvc.model.request.CategoryRequest;
 import com.dsp.belajarmvc.model.request.ProductRequest;
 import com.dsp.belajarmvc.model.response.CategoryResponse;
 import com.dsp.belajarmvc.model.response.ProductResponse;
@@ -34,9 +33,8 @@ public class ProductController {
     @GetMapping("/add")
     public ModelAndView add(){
         ModelAndView view = new ModelAndView("pages/product/add");
-        List<CategoryResponse> categoryList = this.service.getCategory();
-
-        view.addObject("categoryList", categoryList);
+        List<CategoryResponse> ProductList = this.service.getCategory();
+        view.addObject("categoryList", ProductList);
         return view;
     }
 
@@ -57,30 +55,36 @@ public class ProductController {
     @GetMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable("id") Long id){
         ProductResponse result = service.getById(id).orElse(null);
+
         if(result == null){
             return new ModelAndView("redirect:/product");
         }
-
         ModelAndView view = new ModelAndView("pages/product/edit");
+
+        List<CategoryResponse> categoryList = this.service.getCategory();
         view.addObject("data", result);
+        view.addObject("categoryList", categoryList);
         return view;
     }
 
     @PostMapping("/update")
-    public ModelAndView update(@ModelAttribute CategoryRequest request){
-        Optional<CategoryResponse> result = service.update(request, request.getId());
+    public ModelAndView update(@ModelAttribute ProductRequest request){
+        Optional<ProductResponse> result = service.update(request, request.getId());
         if(result.isEmpty()){
-            ModelAndView view = new ModelAndView("pages/category/edit");
+            ModelAndView view = new ModelAndView("pages/product/edit");
             view.addObject("error", "Save failed");
+
+            List<CategoryResponse> categoryList = this.service.getCategory();
+            view.addObject("categoryList", categoryList);
             view.addObject("data", result);
             return view;
         }
-        return new ModelAndView("redirect:/category");
+        return new ModelAndView("redirect:/product");
     }
 
     @GetMapping("/delete/{id}")
     public ModelAndView delete(@PathVariable("id") Long id){
         service.delete(id).orElse(null);
-        return new ModelAndView("redirect:/category");
+        return new ModelAndView("redirect:/product");
     }
 }
