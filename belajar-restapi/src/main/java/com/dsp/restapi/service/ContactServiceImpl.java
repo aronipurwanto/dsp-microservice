@@ -9,6 +9,7 @@ import com.dsp.restapi.model.request.ContactRequest;
 import com.dsp.restapi.model.response.AddressResponse;
 import com.dsp.restapi.model.response.ContactResponse;
 import com.dsp.restapi.model.response.Response;
+import com.dsp.restapi.repository.AddressRepository;
 import com.dsp.restapi.repository.ContactRepository;
 import com.dsp.restapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,11 +28,13 @@ import java.util.UUID;
 public class ContactServiceImpl implements ContactService{
     private UserRepository userRepository;
     private ContactRepository contactRepository;
+    private AddressRepository addressRepository;
 
     @Autowired
-    public ContactServiceImpl(UserRepository userRepository, ContactRepository contactRepository) {
+    public ContactServiceImpl(UserRepository userRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
         this.contactRepository = contactRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Transactional
@@ -73,6 +76,23 @@ public class ContactServiceImpl implements ContactService{
 
         BeanUtils.copyProperties(request, contact);
         return saveContactWithAddress(request, contact);
+    }
+
+    @Override
+    public Optional<Response> updateAddress(String id, String addressId, AddressRequest request) {
+        AddressEntity result = addressRepository.findByIdAndContactId(addressId, id).orElse(null);
+        if(result == null){
+            throw new CommonApiException("Contact not found", HttpStatus.BAD_REQUEST);
+        }
+
+        BeanUtils.copyProperties(request, result);
+        try{
+            this.addressRepository.save(result);
+            AddressResponse response = this.setAddressResponse(result);
+            return Optional.of(new Response(200,"Success", response));
+        }catch (Exception e){
+            throw new CommonApiException("Save contact is failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private Optional<Response> saveContactWithAddress(ContactRequest request, ContactEntity contact) {
