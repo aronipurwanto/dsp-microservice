@@ -29,7 +29,7 @@ public class AddressEntity {
     @Column(name = "postal_code", length = 10)
     private String postalCode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "contact_id", referencedColumnName = "id")
     private ContactEntity contact;
 }

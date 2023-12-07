@@ -27,6 +27,7 @@ public class ContactController {
     @PatchMapping("/{id}")
     public ResponseEntity<Response> update(@PathVariable("id") String id,
                                            @RequestBody @Valid ContactRequest request){
-
+        Response result = contactService.update(id, request).orElse(null);
+        return ResponseEntity.ok(result);
     }
 }

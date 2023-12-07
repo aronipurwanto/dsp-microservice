@@ -6,6 +6,8 @@ import com.dsp.restapi.model.entity.ContactEntity;
 import com.dsp.restapi.model.entity.UserEntity;
 import com.dsp.restapi.model.request.AddressRequest;
 import com.dsp.restapi.model.request.ContactRequest;
+import com.dsp.restapi.model.response.AddressResponse;
+import com.dsp.restapi.model.response.ContactResponse;
 import com.dsp.restapi.model.response.Response;
 import com.dsp.restapi.repository.ContactRepository;
 import com.dsp.restapi.repository.UserRepository;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,7 +49,7 @@ public class ContactServiceImpl implements ContactService{
         contact.setUser(user);
         contact.setId(UUID.randomUUID().toString());
 
-        return setAddressEntity(request, contact);
+        return saveContactWithAddress(request, contact);
     }
 
     @Override
@@ -59,19 +62,20 @@ public class ContactServiceImpl implements ContactService{
         if(contact == null){
             throw new CommonApiException("Contact not found", HttpStatus.BAD_REQUEST);
         }
+
         //1. remove address
         for(AddressEntity addressEntity : contact.getAddress()){
             addressEntity.setContact(null);
-            contact.getAddress().remove(addressEntity);
         }
+        contact.getAddress().clear();
         // contact save
         this.contactRepository.save(contact);
 
         BeanUtils.copyProperties(request, contact);
-        return setAddressEntity(request, contact);
+        return saveContactWithAddress(request, contact);
     }
 
-    private Optional<Response> setAddressEntity(ContactRequest request, ContactEntity contact) {
+    private Optional<Response> saveContactWithAddress(ContactRequest request, ContactEntity contact) {
         for(AddressRequest addressRequest: request.getAddress()){
             AddressEntity addressEntity = new AddressEntity();
             // copy property
@@ -83,10 +87,32 @@ public class ContactServiceImpl implements ContactService{
 
         try{
             contactRepository.save(contact);
-            Response response = new Response(200, "Success", contact);
+            // convert to response
+            ContactResponse contactResponse = this.setContactResponse(contact);
+            // send to response
+            Response response = new Response(200, "Success", contactResponse);
             return Optional.of(response);
         }catch (Exception e) {
             throw new CommonApiException("Save contact is failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private AddressResponse setAddressResponse(AddressEntity address){
+        AddressResponse result = new AddressResponse();
+        BeanUtils.copyProperties(address, result);
+        return result;
+    }
+
+    private ContactResponse setContactResponse(ContactEntity contact){
+        ContactResponse result = new ContactResponse();
+        BeanUtils.copyProperties(contact, result);
+
+        if(!contact.getAddress().isEmpty()) {
+            List<AddressResponse> address = contact.getAddress().stream()
+                    .map(this::setAddressResponse)
+                    .toList();
+            result.setAddress(address);
+        }
+        return result;
     }
 }
