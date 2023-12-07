@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -39,5 +40,10 @@ public class ContactEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = "contact")
-    private List<AddressEntity> address;
+    private List<AddressEntity> address = new ArrayList<>();
+
+    public void addAddress(AddressEntity addressEntity){
+        this.address.add(addressEntity);
+        addressEntity.setContact(this);
+    }
 }

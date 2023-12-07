@@ -14,7 +14,7 @@ import java.math.BigInteger;
 import java.util.UUID;
 
 @Service
-public class AuthServiceImpl {
+public class AuthServiceImpl implements AuthService{
     private UserRepository userRepository;
 
     public AuthServiceImpl(UserRepository userRepository) {

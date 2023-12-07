@@ -15,9 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,9 +29,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Optional<Response> get() {
+        List<UserEntity> result = repository.findAll();
+        if(result.isEmpty()){
+            return Optional.of(new Response(200,"Success", Collections.emptyList()));
+        }
+
+        List<UserResponse> responses = result.stream()
+                .map(this::get)
+                .toList();
+
+        return Optional.of(new Response(200,"Success", responses));
+    }
+
+    @Override
     public Optional<Response> register(RegisterRequest request) {
         UserEntity entity = new UserEntity();
         BeanUtils.copyProperties(request, entity);
+        // encrypt password
         entity.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
         entity.setId(UUID.randomUUID().toString());
 
@@ -49,6 +63,7 @@ public class UserServiceImpl implements UserService{
         return UserResponse.builder()
                 .username(user.getUsername())
                 .name(user.getEmail())
+                .id(user.getId())
                 .build();
     }
 
