@@ -3,6 +3,7 @@ package com.dsp.restapi.controller;
 import com.dsp.restapi.model.request.RegisterRequest;
 import com.dsp.restapi.model.response.Response;
 import com.dsp.restapi.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Response> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<Response> register(@RequestBody @Valid RegisterRequest request){
         Response result = service.register(request).orElse(null);
         if(result == null){
             return ResponseEntity.ok(null);

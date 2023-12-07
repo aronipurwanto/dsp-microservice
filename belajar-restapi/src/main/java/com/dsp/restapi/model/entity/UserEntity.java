@@ -1,5 +1,6 @@
 package com.dsp.restapi.model.entity;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -31,4 +33,9 @@ public class UserEntity {
     private String token;
     @Column(name = "token_expired")
     private BigInteger tokenExpired;
+
+    @PostConstruct
+    public void onCreate(){
+        this.id = UUID.randomUUID().toString();
+    }
 }
