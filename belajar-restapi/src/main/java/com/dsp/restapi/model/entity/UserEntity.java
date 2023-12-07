@@ -33,6 +33,6 @@ public class UserEntity {
     @Column(name = "token_expired")
     private BigInteger tokenExpired;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ContactEntity> contacts = new ArrayList<>();
 }

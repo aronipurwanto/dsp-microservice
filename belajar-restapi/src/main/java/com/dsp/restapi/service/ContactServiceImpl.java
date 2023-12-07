@@ -51,8 +51,6 @@ public class ContactServiceImpl implements ContactService{
             // copy property
             BeanUtils.copyProperties(addressRequest, addressEntity);
             addressEntity.setId(UUID.randomUUID().toString());
-            // set contact id manual
-            addressEntity.setContactId(contact.getId());
             // call method yang ada di contact entity
             contact.addAddress(addressEntity);
         }

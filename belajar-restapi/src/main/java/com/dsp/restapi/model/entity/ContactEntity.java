@@ -39,7 +39,7 @@ public class ContactEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "contact")
+    @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AddressEntity> address = new ArrayList<>();
 
     public void addAddress(AddressEntity addressEntity){
