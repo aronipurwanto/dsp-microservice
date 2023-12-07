@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService{
     public Optional<Response> register(RegisterRequest request) {
         UserEntity entity = new UserEntity();
         BeanUtils.copyProperties(request, entity);
+        entity.setId(UUID.randomUUID().toString());
 
         try{
             this.repository.save(entity);

@@ -1,16 +1,15 @@
 package com.dsp.restapi.model.entity;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -34,8 +33,6 @@ public class UserEntity {
     @Column(name = "token_expired")
     private BigInteger tokenExpired;
 
-    @PostConstruct
-    public void onCreate(){
-        this.id = UUID.randomUUID().toString();
-    }
+    @OneToMany(mappedBy = "user")
+    private List<ContactEntity> contacts = new ArrayList<>();
 }
