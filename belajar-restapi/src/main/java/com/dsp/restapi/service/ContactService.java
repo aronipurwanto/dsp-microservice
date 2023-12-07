@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ContactService {
     Optional<Response> save(ContactRequest request);
+    Optional<Response> update(String id, ContactRequest request);
 }

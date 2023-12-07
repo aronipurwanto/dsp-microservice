@@ -46,6 +46,32 @@ public class ContactServiceImpl implements ContactService{
         contact.setUser(user);
         contact.setId(UUID.randomUUID().toString());
 
+        return setAddressEntity(request, contact);
+    }
+
+    @Override
+    public Optional<Response> update(String id, ContactRequest request) {
+        if(id.isEmpty()){
+            throw new CommonApiException("Id is empty", HttpStatus.BAD_REQUEST);
+        }
+
+        ContactEntity contact = contactRepository.findById(id).orElse(null);
+        if(contact == null){
+            throw new CommonApiException("Contact not found", HttpStatus.BAD_REQUEST);
+        }
+        //1. remove address
+        for(AddressEntity addressEntity : contact.getAddress()){
+            addressEntity.setContact(null);
+            contact.getAddress().remove(addressEntity);
+        }
+        // contact save
+        this.contactRepository.save(contact);
+
+        BeanUtils.copyProperties(request, contact);
+        return setAddressEntity(request, contact);
+    }
+
+    private Optional<Response> setAddressEntity(ContactRequest request, ContactEntity contact) {
         for(AddressRequest addressRequest: request.getAddress()){
             AddressEntity addressEntity = new AddressEntity();
             // copy property
@@ -61,7 +87,6 @@ public class ContactServiceImpl implements ContactService{
             return Optional.of(response);
         }catch (Exception e) {
             throw new CommonApiException("Save contact is failed", HttpStatus.INTERNAL_SERVER_ERROR);
-            //return Optional.empty();
         }
     }
 }
