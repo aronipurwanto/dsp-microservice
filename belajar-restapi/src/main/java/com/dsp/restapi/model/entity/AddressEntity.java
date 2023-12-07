@@ -29,7 +29,10 @@ public class AddressEntity {
     @Column(name = "postal_code", length = 10)
     private String postalCode;
 
+    @Column(name = "contact_id", nullable = false)
+    private String contactId;
+
     @ManyToOne
-    @JoinColumn(name = "contact_id", referencedColumnName = "id")
+    @JoinColumn(name = "contact_id", referencedColumnName = "id", insertable = false, updatable = false)
     private ContactEntity contact;
 }
