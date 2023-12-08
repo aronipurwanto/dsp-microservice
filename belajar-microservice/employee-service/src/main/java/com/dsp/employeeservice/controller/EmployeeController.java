@@ -2,6 +2,7 @@ package com.dsp.employeeservice.controller;
 
 import com.dsp.employeeservice.client.DepartmentClient;
 import com.dsp.employeeservice.model.request.EmployeeRequest;
+import com.dsp.employeeservice.model.response.DepartmentResponse;
 import com.dsp.employeeservice.model.response.EmployeeResponse;
 import com.dsp.employeeservice.model.response.Response;
 import com.dsp.employeeservice.service.EmployeeService;
@@ -51,7 +52,11 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Response> getById(@PathVariable("id") String id){
-        var result = this.service.getById(id);
+        var result = this.service.getById(id).orElse(null);
+        if(result != null){
+            DepartmentResponse department = departmentClient.findById(result.getDepartmentId());
+            result.setDepartment(department);
+        }
         return ResponseEntity.ok(
                 new Response(200, "Success", result)
         );
