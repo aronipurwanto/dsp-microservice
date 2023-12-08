@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeResponse {
+public class DepartmentResponse {
     private String id;
+    private String code;
     private String name;
-    private String departmentId;
-    private String email;
-    private String position;
-    private String gender;
-    private DepartmentResponse department;
 }

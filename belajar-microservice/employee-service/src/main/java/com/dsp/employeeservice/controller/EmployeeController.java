@@ -1,6 +1,8 @@
 package com.dsp.employeeservice.controller;
 
+import com.dsp.employeeservice.client.DepartmentClient;
 import com.dsp.employeeservice.model.request.EmployeeRequest;
+import com.dsp.employeeservice.model.response.EmployeeResponse;
 import com.dsp.employeeservice.model.response.Response;
 import com.dsp.employeeservice.service.EmployeeService;
 import jakarta.validation.Valid;
@@ -8,14 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/Employee")
+@RequestMapping("/employee")
 public class EmployeeController {
     private EmployeeService service;
+    private DepartmentClient departmentClient;
 
     @Autowired
-    public EmployeeController(EmployeeService service) {
+    public EmployeeController(EmployeeService service, DepartmentClient departmentClient) {
         this.service = service;
+        this.departmentClient = departmentClient;
     }
 
     @GetMapping
@@ -26,12 +32,21 @@ public class EmployeeController {
         );
     }
 
-    @GetMapping("/department/{id}")
-    public ResponseEntity<Response> getByDepartmentId(@PathVariable("id") String id){
-        var result = this.service.getByDepartmentId(id);
+    @GetMapping("/with-department")
+    public ResponseEntity<Response> getWithDepartment(){
+        var result = this.service.getAll();
+        result.forEach(emp -> {
+            emp.setDepartment(departmentClient.findById(emp.getDepartmentId()));
+        });
         return ResponseEntity.ok(
                 new Response(200, "Success", result)
         );
+    }
+
+    @GetMapping("/department/{id}")
+    public List<EmployeeResponse> getByDepartmentId(@PathVariable("id") String id){
+        var result = this.service.getByDepartmentId(id);
+        return result;
     }
 
     @GetMapping("/{id}")

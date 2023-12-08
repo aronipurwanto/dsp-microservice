@@ -1,6 +1,8 @@
 package com.dsp.departmentservice.controller;
 
+import com.dsp.departmentservice.client.EmployeeClient;
 import com.dsp.departmentservice.model.request.DepartmentRequest;
+import com.dsp.departmentservice.model.response.DepartmentResponse;
 import com.dsp.departmentservice.model.response.Response;
 import com.dsp.departmentservice.service.DepartmentService;
 import jakarta.validation.Valid;
@@ -12,10 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/department")
 public class DepartmentController {
     private DepartmentService service;
+    private EmployeeClient employeeClient;
+
 
     @Autowired
-    public DepartmentController(DepartmentService service) {
+    public DepartmentController(DepartmentService service, EmployeeClient employeeClient) {
         this.service = service;
+        this.employeeClient = employeeClient;
     }
 
     @GetMapping
@@ -27,8 +32,17 @@ public class DepartmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response> getById(@PathVariable("id") String id){
-        var result = this.service.getById(id);
+    public DepartmentResponse getById(@PathVariable("id") String id){
+        var result = this.service.getById(id).orElse(null);
+        return result;
+    }
+
+    @GetMapping("/with-employee")
+    public ResponseEntity<Response> getWithEmployee(){
+        var result = this.service.getAll();
+        result.forEach(department -> {
+            department.setEmployees(employeeClient.findByDepartment(department.getId()));
+        });
         return ResponseEntity.ok(
                 new Response(200, "Success", result)
         );
