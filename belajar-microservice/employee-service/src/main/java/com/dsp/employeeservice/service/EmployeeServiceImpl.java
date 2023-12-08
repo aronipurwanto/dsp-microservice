@@ -70,6 +70,7 @@ public class EmployeeServiceImpl implements EmployeeService{
     @Override
     public Optional<EmployeeResponse> save(EmployeeRequest request) {
         EmployeeEntity entity = new EmployeeEntity();
+        entity.setId(UUID.randomUUID().toString());
         return saveEmployee(request, entity);
     }
 
@@ -86,7 +87,6 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     private Optional<EmployeeResponse> saveEmployee(EmployeeRequest request, EmployeeEntity entity) {
         BeanUtils.copyProperties(request, entity);
-        entity.setId(UUID.randomUUID().toString());
         try{
             this.repository.save(entity);
             EmployeeResponse result = this.setResponse(entity);

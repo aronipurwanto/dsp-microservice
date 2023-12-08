@@ -57,6 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Override
     public Optional<DepartmentResponse> save(DepartmentRequest request) {
         DepartmentEntity entity = new DepartmentEntity();
+        entity.setId(UUID.randomUUID().toString());
         return saveDepartment(request, entity);
     }
 
@@ -73,7 +74,6 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     private Optional<DepartmentResponse> saveDepartment(DepartmentRequest request, DepartmentEntity entity) {
         BeanUtils.copyProperties(request, entity);
-        entity.setId(UUID.randomUUID().toString());
         try{
             this.repository.save(entity);
             DepartmentResponse result = this.setResponse(entity);
